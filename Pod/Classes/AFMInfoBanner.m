@@ -22,7 +22,7 @@ static const NSTimeInterval kAnimationDuration = 0.3;
 static const int kRedBannerColor = 0xff0000;
 static const int kGreenBannerColor = 0x008000;
 static const int kDefaultTextColor = 0xffffff;
-static const CGFloat kFontSize = 13.f;
+static const CGFloat kFontSize = 10.f;
 static const CGFloat kDefaultHideInterval = 2.0;
 
 @interface AFMInfoBanner ()

@@ -15,6 +15,8 @@ typedef NS_ENUM(NSUInteger, AFMInfoBannerStyle) {
 
 @interface AFMInfoBanner : UIView
 
+@property (nonatomic, readonly, getter=isShown) BOOL shown;
+
 @property (nonatomic) AFMInfoBannerStyle style;
 @property (nonatomic) NSString *text;
 
@@ -27,11 +29,19 @@ typedef NS_ENUM(NSUInteger, AFMInfoBannerStyle) {
 @property (nonatomic) UIColor *infoBackgroundColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic) UIColor *errorTextColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic) UIColor *infoTextColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic) CGFloat topSpacing UI_APPEARANCE_SELECTOR;
+@property (nonatomic) UIColor *customBackgroundColor;
+@property (nonatomic) UIColor *customTextColor;
+
+- (id)initWithTargetView:(UIView *)targetView
+         viewAboveBanner:(UIView *)viewAboveBanner
+    additionalTopSpacing:(CGFloat)additionalTopSpacing;
 
 - (void)show:(BOOL)animated;
 - (void)hide:(BOOL)animated;
 - (void)show:(BOOL)animated withCompletion:(void (^)())completionBlock;
 - (void)hide:(BOOL)animated withCompletion:(void (^)())completionBlock;
+- (void)showAndHideAfter:(NSTimeInterval)timeout animated:(BOOL)animated;
 
 + (instancetype)showWithText:(NSString *)text
                        style:(AFMInfoBannerStyle)style

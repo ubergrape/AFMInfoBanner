@@ -358,7 +358,8 @@ static const CGFloat kDefaultHideInterval = 2.0;
         [self setupViewsForNavigationBar:possibleBar];
     } else {
         UINavigationController *navVC = [searcher topmostNavigationController];
-        if (navVC && navVC.navigationBar.superview && !navVC.navigationBar.translucent) {
+        //if (navVC && navVC.navigationBar.superview && !navVC.navigationBar.translucent) {
+        if (navVC && navVC.navigationBar.superview) {
             [self setupViewsForNavigationBar:navVC.navigationBar];
         } else {
             [self setupViewsToShowInWindow];

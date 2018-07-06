@@ -10,12 +10,12 @@
 #import "AFMInfoBanner.h"
 
 #ifdef UIColorFromRGB
-    #undef UIColorFromRGB
+#undef UIColorFromRGB
 #endif
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((((rgbValue) & 0xFF0000) >> 16))/255.f \
-                                                 green:((((rgbValue) & 0xFF00) >> 8))/255.f \
-                                                  blue:(((rgbValue) & 0xFF))/255.f alpha:1.0]
+green:((((rgbValue) & 0xFF00) >> 8))/255.f \
+blue:(((rgbValue) & 0xFF))/255.f alpha:1.0]
 
 static const CGFloat kMargin = 10.f;
 static const NSTimeInterval kAnimationDuration = 0.3;
@@ -96,9 +96,9 @@ static const CGFloat kDefaultHideInterval = 2.0;
         [self setBackgroundColor:self.customBackgroundColor];
     } else {
         if (self.style == AFMInfoBannerStyleError)
-            [self setBackgroundColor:self.errorBackgroundColor ?: UIColorFromRGB(kRedBannerColor)];
+        [self setBackgroundColor:self.errorBackgroundColor ?: UIColorFromRGB(kRedBannerColor)];
         else
-            [self setBackgroundColor:self.infoBackgroundColor ?: UIColorFromRGB(kGreenBannerColor)];
+        [self setBackgroundColor:self.infoBackgroundColor ?: UIColorFromRGB(kGreenBannerColor)];
     }
 }
 
@@ -108,9 +108,9 @@ static const CGFloat kDefaultHideInterval = 2.0;
         [self.textLabel setTextColor:self.customTextColor];
     } else {
         if (self.style == AFMInfoBannerStyleError)
-            [self.textLabel setTextColor:self.errorTextColor ?: UIColorFromRGB(kDefaultTextColor)];
+        [self.textLabel setTextColor:self.errorTextColor ?: UIColorFromRGB(kDefaultTextColor)];
         else
-            [self.textLabel setTextColor:self.infoTextColor ?: UIColorFromRGB(kDefaultTextColor)];
+        [self.textLabel setTextColor:self.infoTextColor ?: UIColorFromRGB(kDefaultTextColor)];
     }
 }
 
@@ -166,7 +166,7 @@ static const CGFloat kDefaultHideInterval = 2.0;
 - (void)setUp
 {
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
-
+    
     UILabel *label = [[UILabel alloc] init];
     [self setTextLabel:label];
     [self configureLabel];
@@ -194,7 +194,7 @@ static const CGFloat kDefaultHideInterval = 2.0;
 - (void)handleTap
 {
     if (self.tappedBlock)
-        self.tappedBlock();
+    self.tappedBlock();
 }
 
 - (void)setupConstraints
@@ -216,31 +216,31 @@ static const CGFloat kDefaultHideInterval = 2.0;
     // Expand to the superview's width
     [self.superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[self]|"
                                                                            options:0 metrics:nil views:@{@"self": self}]];
-
+    
     // Place initial constraint exactly one frame above the bottom line of view above us
     // or above top of screen, if there is no such view. Assign it to property to animate later.
     CGFloat topOffset = -self.frame.size.height;
     if (self.viewAboveBanner)
-        topOffset += CGRectGetMaxY(self.viewAboveBanner.frame);
+    topOffset += CGRectGetMaxY(self.viewAboveBanner.frame);
     NSArray *topConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(offset)-[self]"
                                                                       options:0
                                                                       metrics:@{@"offset": @(topOffset)}
                                                                         views:@{@"self": self}];
     self.topSpacingConstraint = [topConstraints firstObject];
-
+    
     [self.superview addConstraints:topConstraints];
 }
 
 - (void)updateConstraints
 {
     [super updateConstraints];
-
+    
     self.topMarginConstraint.constant = kMargin + self.additionalTopSpacing;
     self.topSpacingConstraint.constant = 0;
-
+    
     if (self.viewAboveBanner)
-        self.topSpacingConstraint.constant = CGRectGetMaxY(self.viewAboveBanner.frame);
-
+    self.topSpacingConstraint.constant = CGRectGetMaxY(self.viewAboveBanner.frame);
+    
     if ([self isShown]) {
         self.topSpacingConstraint.constant += self.topSpacing;
     } else {
@@ -260,20 +260,20 @@ static const CGFloat kDefaultHideInterval = 2.0;
     // First pass calculates the height correctly with existing constraints.
     [self updateConstraintsIfNeeded];
     [self layoutIfNeeded];
-
+    
     // New pass to take frame and new top constraint, position frame before the animation
     [self setNeedsUpdateConstraints];
     [self updateConstraintsIfNeeded];
     [self layoutIfNeeded];
 }
 
-- (void)show:(BOOL)animated withCompletion:(void (^)())completionBlock
+- (void)show:(BOOL)animated withCompletion:(void (^)(void))completionBlock
 {
     self.showCompletionBlock = completionBlock;
     [self show:animated];
 }
 
-- (void)hide:(BOOL)animated withCompletion:(void (^)())completionBlock
+- (void)hide:(BOOL)animated withCompletion:(void (^)(void))completionBlock
 {
     self.hideCompletionBlock = completionBlock;
     [self hide:animated];
@@ -286,56 +286,56 @@ static const CGFloat kDefaultHideInterval = 2.0;
 
 - (void)show:(BOOL)animated
 {
-
+    
     if (self.hideTimer) {
         [self.hideTimer invalidate];
         self.hideTimer = nil;
     }
-
+    
     if ([self superview]) {
         if (self.showCompletionBlock)
-            self.showCompletionBlock();
+        self.showCompletionBlock();
         return;
     }
-
+    
     [self applyStyle];
-
+    
     if (self.needsToSetupViews)
-        [self setupViewsAndFrames];
-
+    [self setupViewsAndFrames];
+    
     // In previously indicated, send subview to be below another view.
     // This is used when showing below navigation bar
     if (self.viewAboveBanner)
-        [self.targetView insertSubview:self belowSubview:self.viewAboveBanner];
+    [self.targetView insertSubview:self belowSubview:self.viewAboveBanner];
     else
-        [self.targetView addSubview:self];
-
+    [self.targetView addSubview:self];
+    
     [self setupParentConstraints];
-
+    
     [self setHidden:NO];
-
+    
     self.shown = YES;
     [self updateUI];
-
+    
     if (animated) {
         self.transform = CGAffineTransformMakeTranslation(0, -(self.topSpacing + self.frame.size.height));
-
+        
         [UIView animateWithDuration:kAnimationDuration animations:^{
             self.transform = CGAffineTransformIdentity;
         } completion:^(BOOL finished) {
             if (self.showCompletionBlock)
-                self.showCompletionBlock();
+            self.showCompletionBlock();
         }];
     } else {
         if (self.showCompletionBlock)
-            self.showCompletionBlock();
+        self.showCompletionBlock();
     }
 }
 
 - (void)showAndHideAfter:(NSTimeInterval)timeout animated:(BOOL)animated
 {
     [self show:animated];
-
+    
     self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:timeout
                                                       target:self
                                                     selector:@selector(scheduledHide:)
@@ -380,7 +380,7 @@ static const CGFloat kDefaultHideInterval = 2.0;
     CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
     // Forget the frame convertions, smallest is the height, no doubt
     CGFloat statusBarHeight = MIN(statusBarFrame.size.width, statusBarFrame.size.height);
-
+    
     self.additionalTopSpacing = statusBarHeight;
     self.targetView = window;
 }
@@ -396,24 +396,24 @@ static const CGFloat kDefaultHideInterval = 2.0;
         [self.hideTimer invalidate];
         self.hideTimer = nil;
     }
-
+    
     self.shown = NO;
     [self updateUI];
-
+    
     if (animated) {
         self.transform = CGAffineTransformMakeTranslation(0, self.topSpacing + self.frame.size.height);
-
+        
         [UIView animateWithDuration:kAnimationDuration animations:^{
             self.transform = CGAffineTransformIdentity;
         } completion:^(BOOL finished) {
             [self removeFromSuperview];
             if (self.hideCompletionBlock)
-                self.hideCompletionBlock();
+            self.hideCompletionBlock();
         }];
     } else {
         [self removeFromSuperview];
         if (self.hideCompletionBlock)
-            self.hideCompletionBlock();
+        self.hideCompletionBlock();
     }
 }
 
@@ -441,7 +441,7 @@ static const CGFloat kDefaultHideInterval = 2.0;
     AFMInfoBanner *banner = [[[self class] alloc] init];
     [banner setText:text];
     [banner setStyle:style];
-
+    
     [banner show:animated];
     return banner;
 }
